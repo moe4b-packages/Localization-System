@@ -1,0 +1,16 @@
+{
+    "name": "MB-Localization",
+    "rootNamespace": "MB.LocalizationSystem",
+    "references": [
+        "GUID:25bbaff0f61abea489d3a55b470819db"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

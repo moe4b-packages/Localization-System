@@ -1,0 +1,21 @@
+{
+   "name": "com.moe-baker.localization-system",
+   "version": "1.0.0",
+   "displayName": "Localization System",
+   "description": "A C# script based narrative system",
+   "unity": "2017.1",
+   "unityRelease": "0a0",
+   "keywords":
+   [
+   ],
+   "author":
+   {
+      "name": "Moe baker",
+      "email": "moe4baker@gmail.com",
+      "url": "https://moe-baker.github.io"
+   },
+   "dependencies":
+   {
+      "com.moe-baker.toolbox": "0.0.0"
+   }
+}
