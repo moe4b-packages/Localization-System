@@ -14,10 +14,11 @@ using UnityEngine;
 namespace MB.LocalizationSystem
 {
     [Global(ScriptableManagerScope.Project)]
-    [SettingsMenu(Toolbox.Paths.Root + "Localization")]
+    [SettingsMenu(Toolbox.Paths.Root + Name)]
     public class Localization : ScriptableManager<Localization>
     {
-        public const string Path = Toolbox.Paths.Root + "Localization/";
+        public const string Name = "Localization";
+        public const string Path = Toolbox.Paths.Root + Name + "/";
 
         [SerializeField]
         bool autoInitialize = true;
