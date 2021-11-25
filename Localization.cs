@@ -62,6 +62,8 @@ namespace MB.LocalizationSystem
             {
                 var json = asset.text;
 
+                Text?.Clear();
+
                 if (string.IsNullOrEmpty(json) == false)
                     JsonConvert.PopulateObject(json, this);
 
