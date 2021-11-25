@@ -41,7 +41,7 @@ namespace MB.LocalizationSystem
                 }
                 catch
                 {
-                    Debug.LogError("Localization Extraction Stopped Because of Exception");
+                    Debug.LogError("Localization Extraction Stopped Because of an Exception");
                     throw;
                 }
                 finally
