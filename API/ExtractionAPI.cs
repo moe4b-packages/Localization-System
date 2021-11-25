@@ -20,9 +20,13 @@ namespace MB.LocalizationSystem
             [MenuItem(Path + "Extract")]
             static void Execute() => Process().Forget();
 
+            static bool IsRunning = false;
             public static async Task Process()
             {
-                EditorUtility.DisplayProgressBar("Narrative Extraction", "Processing", 1f);
+                if (IsRunning) throw new InvalidOperationException("Localization Extraction Already in Progress");
+                IsRunning = true;
+
+                var id = Progress.Start("Localization Extraction", options: Progress.Options.Indefinite);
 
                 try
                 {
@@ -42,7 +46,8 @@ namespace MB.LocalizationSystem
                 }
                 finally
                 {
-                    EditorUtility.ClearProgressBar();
+                    Progress.Remove(id);
+                    IsRunning = false;
                 }
             }
 
