@@ -18,23 +18,39 @@ namespace MB.LocalizationSystem
         public static class Extraction
         {
             [MenuItem(Path + "Extract")]
-            public static async void Process()
-            {
-                var data = await Data.Retrieve();
+            static void Execute() => Process().Forget();
 
-                foreach (var entry in Entries)
+            public static async Task Process()
+            {
+                EditorUtility.DisplayProgressBar("Narrative Extraction", "Processing", 1f);
+
+                try
                 {
-                    entry.Load();
-                    Process(entry, data);
-                    entry.Save();
+                    var content = await Content.Retrieve();
+
+                    foreach (var entry in Entries)
+                    {
+                        entry.Load();
+                        Process(entry, content);
+                        entry.Save();
+                    }
+                }
+                catch
+                {
+                    Debug.LogError("Localization Extraction Stopped Because of Exception");
+                    throw;
+                }
+                finally
+                {
+                    EditorUtility.ClearProgressBar();
                 }
             }
 
-            public static void Process(Entry entry, Data data)
+            static void Process(Entry entry, Content content)
             {
                 //Text
                 {
-                    foreach (var text in data.Text)
+                    foreach (var text in content.Text)
                     {
                         if (entry.Text.ContainsKey(text) == false)
                             entry.Text.Add(text, text);
@@ -42,31 +58,31 @@ namespace MB.LocalizationSystem
                 }
             }
 
-            public class Data
+            public class Content
             {
                 public HashSet<string> Text { get; }
 
-                public Data()
+                public Content()
                 {
                     Text = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 }
 
-                public static async Task<Data> Retrieve()
+                public static async Task<Content> Retrieve()
                 {
-                    var data = new Data();
+                    var content = new Content();
 
                     var processors = Processor.RetrieveAll();
 
                     foreach (var processor in processors)
-                        await processor.Modify(data);
+                        await processor.Modify(content);
 
-                    return data;
+                    return content;
                 }
             }
 
             public abstract class Processor
             {
-                public abstract Task Modify(Data data);
+                public abstract Task Modify(Content content);
 
                 public Processor() { }
 
