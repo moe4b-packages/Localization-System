@@ -26,6 +26,8 @@ namespace MB.LocalizationSystem
                 if (IsRunning) throw new InvalidOperationException("Localization Extraction Already in Progress");
                 IsRunning = true;
 
+                EditorApplication.LockReloadAssemblies();
+
                 var id = Progress.Start("Localization Extraction", options: Progress.Options.Indefinite);
 
                 try
@@ -46,6 +48,7 @@ namespace MB.LocalizationSystem
                 }
                 finally
                 {
+                    EditorApplication.UnlockReloadAssemblies();
                     Progress.Remove(id);
                     IsRunning = false;
                 }
