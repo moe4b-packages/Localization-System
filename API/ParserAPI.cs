@@ -66,6 +66,7 @@ namespace MB.LocalizationSystem
                     var text = Encoding.UTF8.GetString(raw);
 
                     var structure = Structure.Parse(text);
+                    Debug.Log($"Recieved: {structure}");
                     return structure;
                 }
                 finally
@@ -111,6 +112,13 @@ namespace MB.LocalizationSystem
                 [JsonProperty]
                 public HashSet<string> Text { get; set; }
 
+                public override string ToString()
+                {
+                    return $"Localization Parsing Structure:" +
+                        $"{Environment.NewLine}" +
+                        $"Text: {Text.ToCollectionString()}";
+                }
+
                 public Structure()
                 {
 
@@ -137,5 +145,14 @@ namespace MB.LocalizationSystem
             }
         }
 #endif
+    }
+
+    /// <summary>
+    /// Parameter that marks any constant expression within a method invocation as a localized text to be collected while parsing
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class LocalizationTextParameterAttribute : Attribute
+    {
+
     }
 }
