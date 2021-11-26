@@ -147,21 +147,26 @@ namespace MB.LocalizationSystem
             OnSet?.Invoke(Selection);
         }
 
-        public static string Format(string text, IDictionary<string, string> phrases)
+        public static string Format(string text, ILocalizationFormat format)
         {
             text = Text[text];
 
-            if (phrases.Count == 0) return text;
+            if (format.Phrases.Count == 0) return text;
 
             using (DisposablePool.StringBuilder.Lease(out var builder))
             {
                 builder.Append(text);
 
-                foreach (var pair in phrases)
+                foreach (var pair in format.Phrases)
                     builder.Replace($"{{{pair.Key}}}", Text[pair.Value]);
 
                 return builder.ToString();
             }
         }
+    }
+
+    public interface ILocalizationFormat
+    {
+        public Dictionary<string, string> Phrases { get; }
     }
 }
