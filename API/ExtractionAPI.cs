@@ -63,6 +63,13 @@ namespace MB.LocalizationSystem
                         if (entry.Text.ContainsKey(text) == false)
                             entry.Text.Add(text, text);
                     }
+
+                    var pairs = entry.Text.ToArray();
+                    foreach (var pair in pairs)
+                    {
+                        if (pair.Key == pair.Value && content.Text.Contains(pair.Key) == false)
+                            entry.Text.Remove(pair.Key);
+                    }
                 }
             }
 
