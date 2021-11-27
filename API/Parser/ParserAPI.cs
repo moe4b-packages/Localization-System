@@ -5,6 +5,7 @@ using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEditor.SceneManagement;
 #endif
 
@@ -18,6 +19,9 @@ using System.Text;
 using System.Threading;
 
 using UnityEngine.SceneManagement;
+using System.Linq;
+using System.Reflection;
+using UnityEngine.Windows;
 
 namespace MB.LocalizationSystem
 {
@@ -90,16 +94,16 @@ namespace MB.LocalizationSystem
 
                 public static class Executable
                 {
-                    public const string RelativePath = "External/Localization Parser/MB.Localization-System.Parser.exe";
+                    public const string DirectoryRelativePath = "API/Parser/Executable/MB.Localization-System.Parser.dll";
 
                     public static Process Start()
                     {
-                        var target = System.IO.Path.GetFullPath(RelativePath);
-
+                        var target = RetrievePath();
                         var solution = GetSolutionPath();
-                        var arguments = MUtility.FormatProcessArguments(solution, PipeName);
 
-                        var info = new ProcessStartInfo(target, arguments);
+                        var argument = $"/C dotnet {MUtility.FormatProcessArguments(target, solution, PipeName)}";
+
+                        var info = new ProcessStartInfo("cmd.exe", argument);
                         info.CreateNoWindow = true;
                         info.UseShellExecute = false;
                         var process = System.Diagnostics.Process.Start(info);
@@ -107,6 +111,27 @@ namespace MB.LocalizationSystem
                         process.EnableRaisingEvents = true;
 
                         return process;
+                    }
+
+                    public static string RetrievePath()
+                    {
+                        var target = Assembly.GetExecutingAssembly().GetName().Name;
+
+                        foreach (var assembly in AssetCollection.FindAll<AssemblyDefinitionAsset>())
+                        {
+                            if (assembly.name == target)
+                            {
+                                var path = AssetDatabase.GetAssetPath(assembly);
+
+                                path = System.IO.Path.GetDirectoryName(path);
+                                path = System.IO.Path.Combine(path, DirectoryRelativePath);
+                                path = System.IO.Path.GetFullPath(path);
+
+                                return path;
+                            }
+                        }
+
+                        throw new Exception("Localization Parser Executable Couldn't be Found");
                     }
                 }
 
