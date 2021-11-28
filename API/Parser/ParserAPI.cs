@@ -41,7 +41,7 @@ namespace MB.LocalizationSystem
                     IsRunning = true;
 
                     var pipe = new NamedPipeServerStream(PipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
-                    Debug.Log("Pipe Server Started");
+                    Debug.Log("Localization Parser Pipe Server Started");
 
                     try
                     {
@@ -57,7 +57,7 @@ namespace MB.LocalizationSystem
                         }
 
                         await pipe.WaitForConnectionAsync(cancellationToken: cancellation.Token);
-                        Debug.Log("Pipe Server Connected");
+                        Debug.Log("Localization Parser Pipe Server Connected");
 
                         var marker = new byte[sizeof(int)];
                         await pipe.ReadAsync(marker, cancellationToken: cancellation.Token);
@@ -66,7 +66,7 @@ namespace MB.LocalizationSystem
 
                         var raw = new byte[length];
                         await pipe.ReadAsync(raw, cancellationToken: cancellation.Token);
-                        Debug.Log("Pipe Server Recieved Data");
+                        Debug.Log("Localization Parser Pipe Server Recieved Data");
 
                         parser.Exited -= InvokeCancellation;
 
@@ -80,7 +80,7 @@ namespace MB.LocalizationSystem
                     finally
                     {
                         pipe.Close();
-                        Debug.Log("Pipe Server Closed");
+                        Debug.Log("Localization Parser Pipe Server Closed");
                         IsRunning = false;
                     }
                 }
@@ -94,16 +94,19 @@ namespace MB.LocalizationSystem
 
                 public static class Executable
                 {
-                    public const string DirectoryRelativePath = "API/Parser/Executable/MB.Localization-System.Parser.dll";
+                    public const string DirectoryRelativePath = "API/Parser/Executable/MB.Localization-System.Parser.exe";
 
                     public static Process Start()
                     {
+                        if (Application.platform != RuntimePlatform.WindowsEditor)
+                            throw new InvalidOperationException($"Can Only Start Localization Parser from Windows Editor");
+
                         var target = RetrievePath();
+
                         var solution = GetSolutionPath();
+                        var arguments = MUtility.FormatProcessArguments(solution, PipeName);
 
-                        var argument = MUtility.FormatProcessArguments(target, solution, PipeName);
-
-                        var info = MUtility.FormatSystemCommand($"dotnet {argument}");
+                        var info = new ProcessStartInfo(target, arguments);
                         info.CreateNoWindow = true;
                         info.UseShellExecute = false;
                         var process = System.Diagnostics.Process.Start(info);
