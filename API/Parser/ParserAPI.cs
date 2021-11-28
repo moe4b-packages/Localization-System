@@ -101,9 +101,9 @@ namespace MB.LocalizationSystem
                         var target = RetrievePath();
                         var solution = GetSolutionPath();
 
-                        var argument = $"/C dotnet {MUtility.FormatProcessArguments(target, solution, PipeName)}";
+                        var argument = MUtility.FormatProcessArguments(target, solution, PipeName);
 
-                        var info = new ProcessStartInfo("cmd.exe", argument);
+                        var info = MUtility.FormatSystemCommand($"dotnet {argument}");
                         info.CreateNoWindow = true;
                         info.UseShellExecute = false;
                         var process = System.Diagnostics.Process.Start(info);
