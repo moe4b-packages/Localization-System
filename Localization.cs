@@ -16,14 +16,11 @@ namespace MB.LocalizationSystem
 {
     [Global(ScriptableManagerScope.Project)]
     [SettingsMenu(Toolbox.Paths.Root + Name)]
+    [LoadOrder(Runtime.Defaults.LoadOrder.LocalizationSystem)]
     public partial class Localization : ScriptableManager<Localization>
     {
         public const string Name = "Localization";
         public const string Path = Toolbox.Paths.Root + Name + "/";
-
-        [SerializeField]
-        bool autoInitialize = true;
-        public static bool AutoInitialize => Instance.autoInitialize;
 
         [SerializeField]
         Entry[] entries = Array.Empty<Entry>();
@@ -111,12 +108,7 @@ namespace MB.LocalizationSystem
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void OnRuntime()
-        {
-            if (AutoInitialize) Prepare();
-        }
-
-        internal static void Prepare()
+        static void Initialize()
         {
             if (Entries.Length == 0)
                 throw new Exception($"No Narrative Localization Entries Set," +
