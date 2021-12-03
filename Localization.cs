@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace MB.LocalizationSystem
 {
-    [Global(ScriptableManagerScope.Project)]
+    [Manager]
     [SettingsMenu(Toolbox.Paths.Root + Name)]
     [LoadOrder(Runtime.Defaults.LoadOrder.LocalizationSystem)]
     public partial class Localization : ScriptableManager<Localization>
@@ -107,7 +107,13 @@ namespace MB.LocalizationSystem
             }
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        protected override void OnLoad()
+        {
+            base.OnLoad();
+
+            if (IsPlaying) Initialize();
+        }
+
         static void Initialize()
         {
             if (Entries.Length == 0)
