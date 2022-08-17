@@ -104,7 +104,7 @@ namespace MB.LocalizationSystem
                         var target = RetrievePath();
 
                         var solution = GetSolutionPath();
-                        var arguments = MUtility.FormatProcessArguments(solution, PipeName);
+                        var arguments = MUtility.Process.FormatArguments(solution, PipeName);
 
                         var info = new ProcessStartInfo(target, arguments);
                         info.CreateNoWindow = true;
