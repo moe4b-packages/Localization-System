@@ -34,7 +34,7 @@ namespace MB.LocalizationSystem
                 {
                     var content = await Content.Retrieve();
 
-                    foreach (var entry in Entries)
+                    foreach (var entry in Instance.Entries)
                     {
                         entry.Load();
                         Process(entry, content);

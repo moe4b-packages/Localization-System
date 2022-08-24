@@ -21,37 +21,27 @@ namespace MB.LocalizationSystem
     [LoadOrder(Runtime.Defaults.LoadOrder.LocalizationSystem)]
     public partial class Localization : ScriptableManager<Localization>
     {
-        static AutoPreferences AutoPreferences => AutoPreferences.Instance;
+        public const string Name = "Localization";
 
-        //Instance
-        #region
+        public const string Path = Toolbox.Paths.Root + Name + "/";
+
         [SerializeField]
         Entry[] entries = Array.Empty<Entry>();
+        public Entry[] Entries => entries;
+
+        public Dictionary<string, Entry> Dictionary { get; } = new Dictionary<string, Entry>(StringComparer.OrdinalIgnoreCase);
+
+        public Entry Selection { get; private set; }
+        public Entry.TextDictionary Text => Selection.Text;
+
+        public AutoPreferenceVariable<string> Choice { get; private set; }
 
         protected override void OnLoad()
         {
             base.OnLoad();
 
-            if (IsPlaying) Initialize();
-        }
-        #endregion
+            if (IsPlaying == false) return;
 
-        //Static
-        #region
-        public const string Name = "Localization";
-        public const string Path = Toolbox.Paths.Root + Name + "/";
-
-        public static Entry[] Entries => Instance.entries;
-
-        public static Dictionary<string, Entry> Dictionary { get; } = new Dictionary<string, Entry>(StringComparer.OrdinalIgnoreCase);
-
-        public static Entry Selection { get; private set; }
-        public static Entry.TextDictionary Text => Selection.Text;
-
-        public static AutoPreferenceVariable<string> Choice { get; private set; }
-
-        static void Initialize()
-        {
             Choice = new AutoPreferenceVariable<string>("Localization/Choice");
 
             if (Entries.Length == 0)
@@ -70,8 +60,8 @@ namespace MB.LocalizationSystem
         }
 
         public delegate void SetDelegate(Entry entry);
-        public static event SetDelegate OnSet;
-        public static void Set(string id)
+        public event SetDelegate OnSet;
+        public void Set(string id)
         {
             if (Dictionary.TryGetValue(id, out var entry) == false)
                 throw new Exception($"Cannot Set Localization With ID: '{id}' Because No Entry Was Registerd With That ID");
@@ -83,7 +73,7 @@ namespace MB.LocalizationSystem
             OnSet?.Invoke(Selection);
         }
 
-        public static string Format(string text, ILocalizationFormat format)
+        public string Format(string text, ILocalizationFormat format)
         {
             text = Text[text];
 
@@ -99,7 +89,6 @@ namespace MB.LocalizationSystem
                 return builder.ToString();
             }
         }
-        #endregion
 
         [Serializable]
         [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
