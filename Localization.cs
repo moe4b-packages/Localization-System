@@ -12,6 +12,8 @@ using UnityEditor;
 
 using UnityEngine;
 
+[assembly: AssemblySymbolDefine("MB_LOCALIZATION")]
+
 namespace MB.LocalizationSystem
 {
     [Manager]
