@@ -21,6 +21,8 @@ namespace MB.LocalizationSystem
     [LoadOrder(Runtime.Defaults.LoadOrder.LocalizationSystem)]
     public partial class Localization : ScriptableManager<Localization>
     {
+        static AutoPreferences AutoPreferences => AutoPreferences.Instance;
+
         //Instance
         #region
         [SerializeField]
@@ -46,20 +48,12 @@ namespace MB.LocalizationSystem
         public static Entry Selection { get; private set; }
         public static Entry.TextDictionary Text => Selection.Text;
 
-        public static string Choice
-        {
-            get
-            {
-                return AutoPreferences.Read("Localization/Choice", fallback: Entries[0].Title);
-            }
-            private set
-            {
-                AutoPreferences.Set("Localization/Choice", value);
-            }
-        }
+        public static AutoPreferenceVariable<string> Choice { get; private set; }
 
         static void Initialize()
         {
+            Choice = new AutoPreferenceVariable<string>("Localization/Choice");
+
             if (Entries.Length == 0)
                 throw new Exception($"No Narrative Localization Entries Set," +
                     $" Please Set at Least Once in the Project Settings Window");
@@ -82,7 +76,7 @@ namespace MB.LocalizationSystem
             if (Dictionary.TryGetValue(id, out var entry) == false)
                 throw new Exception($"Cannot Set Localization With ID: '{id}' Because No Entry Was Registerd With That ID");
 
-            Choice = id;
+            Choice.Value = id;
 
             Selection = entry;
 
