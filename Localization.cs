@@ -42,11 +42,11 @@ namespace MB.LocalizationSystem
 
             if (IsPlaying == false) return;
 
-            Choice = new AutoPreferenceVariable<string>("Localization/Choice");
-
             if (Entries.Length == 0)
                 throw new Exception($"No Narrative Localization Entries Set," +
                     $" Please Set at Least Once in the Project Settings Window");
+
+            Choice = new AutoPreferenceVariable<string>("Localization/Choice", Entries[0].Title);
 
             for (int i = 0; i < Entries.Length; i++)
                 Entries[i].Load();
